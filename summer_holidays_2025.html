@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 La Gran Aventura del Verano 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- VARIABLES DE COLOR Y FUENTES --- */
+        :root {
+            --nk-orange: #FF6600;
+            --nk-green: #98C83C;
+            --nk-purple: #3A1F5D;
+            --nk-blue: #00A9E0;
+            --nk-white: #FEFEFE;
+            --font-title: 'Bangers', cursive;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        /* --- ESTILOS GENERALES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; } /* Habilita el scroll suave */
+        body {
+            font-family: var(--font-body);
+            line-height: 1.6;
+            color: var(--nk-purple);
+            background-color: #f0f0f0;
+            background-image: 
+                radial-gradient(circle at 100% 0%, rgba(152, 200, 60, 0.3) 15%, transparent 15%),
+                radial-gradient(circle at 0% 100%, rgba(0, 169, 224, 0.3) 15%, transparent 15%);
+            background-size: 40em 40em;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* --- HEADER Y TÍTULO --- */
+        .magic-header {
+            text-align: center;
+            background: var(--nk-white);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 4px solid var(--nk-purple);
+            box-shadow: 10px 10px 0px var(--nk-purple);
+            position: relative;
+        }
+        .magic-title {
+            font-family: var(--font-title);
+            font-size: 4.5em;
+            color: var(--nk-orange);
+            -webkit-text-stroke: 3px var(--nk-purple);
+            text-shadow: 6px 6px 0px var(--nk-blue);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        /* --- TARJETAS DE DÍA --- */
+        .day-card {
+            background: var(--nk-white);
+            border-radius: 25px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 4px solid var(--nk-purple);
+            box-shadow: 8px 8px 0px var(--nk-purple);
+            transition: all 0.2s ease-out;
+        }
+        .day-card.locked {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+        .day-card.locked .day-header { cursor: not-allowed; }
+        .day-card.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            z-index: 10;
+            animation: shake-lock 2s ease-in-out infinite;
+        }
+        .day-card.unlocked { animation: unlock 0.5s ease; border-color: var(--nk-green); }
+        .day-card:hover:not(.locked) {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px var(--nk-purple);
+        }
+        .day-header { 
+            padding: 20px 30px; 
+            position: relative; 
+            overflow: hidden; 
+            cursor: pointer;
+            background-color: var(--nk-blue);
+        }
+        .day-header.special-day {
+            background: var(--nk-orange);
+        }
+        .day-number {
+            font-family: var(--font-title);
+            font-size: 3em; 
+            font-weight: normal; 
+            color: var(--nk-white);
+            -webkit-text-stroke: 2.5px var(--nk-purple);
+            text-shadow: none;
+            margin-bottom: 5px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+            letter-spacing: 1px;
+        }
+        .day-number svg {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(3px 3px 0px var(--nk-purple));
+        }
+        .day-badge {
+            font-family: var(--font-body);
+            font-weight: 700;
+            display: inline-block; 
+            background: var(--nk-purple); 
+            color: var(--nk-white);
+            padding: 5px 15px; 
+            border-radius: 20px; 
+            font-size: 0.6em;
+            animation: pulse 2s infinite;
+            border: 3px solid var(--nk-green);
+            margin-left: 10px;
+        }
+        .day-content { padding: 30px; display: none; }
+        .day-content.show { display: block; animation: slideDown 0.5s ease; }
+        
+        /* --- ITINERARIO DE ACTIVIDADES --- */
+        .itinerary-container.hidden { display: none; }
+        .activity-box {
+            background: #f0f0f0;
+            border: 4px solid var(--nk-blue); 
+            border-radius: 20px;
+            padding: 25px; margin: 20px 0; position: relative;
+        }
+        .activity-title { 
+            font-family: var(--font-title);
+            color: var(--nk-purple); 
+            font-size: 2em; 
+            margin-bottom: 15px; 
+            letter-spacing: 1px;
+        }
+        .activity-list { list-style: none; padding: 0; }
+        .activity-item {
+            background: var(--nk-white); padding: 15px; margin: 10px 0;
+            border-radius: 15px; display: flex; align-items: center;
+            gap: 20px;
+            border: 2px solid var(--nk-purple);
+        }
+        .activity-time {
+            background: var(--nk-orange); color: var(--nk-white);
+            font-weight: bold; padding: 8px 12px;
+            border-radius: 10px; font-size: 1.1em;
+            flex-shrink: 0;
+            border: 2px solid var(--nk-purple);
+        }
+        .activity-desc { font-size: 1.1em; }
+        
+        /* --- QUIZ DE DESBLOQUEO --- */
+        .quiz-container {
+            background: var(--nk-purple);
+            color: var(--nk-white);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 4px solid var(--nk-green);
+        }
+        .quiz-title {
+            font-family: var(--font-title);
+            font-size: 2em;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .quiz-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            border: 4px solid var(--nk-white);
+            margin-bottom: 20px;
+        }
+        .quiz-question { font-size: 1.3em; margin-bottom: 20px; }
+        .quiz-options { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .quiz-option {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.1em;
+            background: var(--nk-white);
+            color: var(--nk-purple);
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 3px solid var(--nk-purple);
+            box-shadow: 4px 4px 0px var(--nk-purple);
+        }
+        .quiz-option:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--nk-purple); }
+        .quiz-option.correct { background: var(--nk-green); color: var(--nk-purple); }
+        .quiz-option.incorrect { background: var(--nk-orange); color: var(--nk-white); animation: horizontal-shake 0.5s; }
+
+        /* --- GEMINI STORY FEATURE --- */
+        .story-button {
+            font-family: var(--font-title);
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            background: var(--nk-green); 
+            color: var(--nk-purple); 
+            border: 3px solid var(--nk-purple); 
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer; 
+            box-shadow: 6px 6px 0px var(--nk-purple); 
+            transition: all 0.2s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+        .story-button:hover { 
+            transform: translate(3px, 3px); 
+            box-shadow: 3px 3px 0px var(--nk-purple); 
+        }
+        .story-button:disabled {
+            background: #ccc;
+            box-shadow: 3px 3px 0px #999;
+            cursor: not-allowed;
+        }
+        .story-display {
+            background: var(--nk-white);
+            border: 4px dashed var(--nk-orange);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 1.1em;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        /* --- OTROS COMPONENTES --- */
+        .character-guide {
+            position: fixed; bottom: 20px; right: 20px;
+            width: 100px; height: 100px;
+            cursor: pointer; z-index: 1000; 
+            animation: floatCharacter 3s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+        .character-guide:hover {
+            transform: scale(1.1);
+        }
+        .character-speech {
+            position: fixed; bottom: 140px; right: 40px; 
+            background: var(--nk-white);
+            padding: 20px; border-radius: 20px; 
+            box-shadow: 6px 6px 0px var(--nk-purple);
+            border: 4px solid var(--nk-purple);
+            max-width: 250px; display: none; z-index: 999;
+        }
+        .character-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: 30px;
+            border-width: 20px 20px 0 0;
+            border-style: solid;
+            border-color: var(--nk-purple) transparent transparent transparent;
+        }
+        .character-speech.show { display: block; animation: popIn 0.3s ease; }
+        .progress-bar { background: #e0e0e0; height: 30px; border-radius: 15px; overflow: hidden; border: 3px solid var(--nk-purple); }
+        .progress-fill {
+            background: var(--nk-green);
+            height: 100%; width: 0%; border-radius: 10px; transition: width 1s ease;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--nk-purple); font-weight: bold;
+        }
+        .sticker-collection {
+            background: var(--nk-blue);
+            border-radius: 20px; padding: 25px; margin: 30px 0; text-align: center;
+            border: 4px solid var(--nk-purple);
+        }
+        .sticker-collection h2 {
+            font-family: var(--font-title);
+            color: var(--nk-white);
+            font-size: 2.5em;
+            -webkit-text-stroke: 2px var(--nk-purple);
+            letter-spacing: 1px;
+        }
+        .sticker {
+            display: inline-block;
+            width: 80px; height: 80px;
+            margin: 10px;
+            filter: grayscale(100%);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+        .sticker.earned { filter: grayscale(0%); opacity: 1; animation: earnSticker 0.5s ease; }
+        .game-button {
+            font-family: var(--font-title);
+            font-size: 1.5em;
+            letter-spacing: 1px;
+            background: var(--nk-orange); 
+            color: var(--nk-white); 
+            border: 3px solid var(--nk-purple); 
+            padding: 15px 30px;
+            border-radius: 30px;
+            cursor: pointer; 
+            box-shadow: 6px 6px 0px var(--nk-purple); 
+            transition: all 0.2s ease;
+        }
+        .game-button:hover { transform: translate(3px, 3px); box-shadow: 3px 3px 0px var(--nk-purple); }
+
+        .sound-effect, .confetti, .emoji-rain { position: fixed; pointer-events: none; z-index: 9999; }
+        .sound-effect { font-size: 3em; animation: soundPop 1s ease; }
+        .confetti { width: 10px; height: 10px; animation: confettiFall 3s linear; }
+        .emoji-rain { top: -50px; font-size: 2em; animation: emojiDrop 4s linear infinite; }
+
+        /* --- KEYFRAMES --- */
+        @keyframes magicBackground { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes stripes { 0%{transform:translateX(0)} 100%{transform:translateX(50px)} }
+        @keyframes rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+        @keyframes specialGradient { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        @keyframes shake-lock { 0%,100%{transform:translate(-50%,-50%) rotate(0deg)} 25%{transform:translate(-50%,-50%) rotate(-5deg)} 75%{transform:translate(-50%,-50%) rotate(5deg)} }
+        @keyframes unlock { 0%{transform:scale(1) rotate(0deg)} 50%{transform:scale(1.05) rotate(2deg)} 100%{transform:scale(1) rotate(0deg)} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes floatCharacter { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+        @keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+        @keyframes earnSticker { 0%{transform:scale(0) rotate(0deg)} 50%{transform:scale(1.2) rotate(180deg)} 100%{transform:scale(1) rotate(360deg)} }
+        @keyframes confettiFall { to{transform:translateY(100vh) rotate(360deg)} }
+        @keyframes soundPop { 0%{transform:scale(0) rotate(0deg);opacity:1} 100%{transform:scale(2) rotate(360deg);opacity:0} }
+        @keyframes emojiDrop { to{transform:translateY(calc(100vh + 50px)) rotate(360deg)} }
+        @keyframes horizontal-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .magic-title { font-size: 2.5em; }
+            .character-guide { width: 80px; height: 80px; }
+            .sticker { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Mágico -->
+        <header class="magic-header">
+            <h1 class="magic-title">La Gran Aventura del Verano 2025</h1>
+            <p style="font-size: 1.3em; color: var(--nk-purple); font-weight: bold;">¡10 días de diversión épica te esperan!</p>
+            <div class="countdown-timer" style="background: var(--nk-purple); color: var(--nk-white); padding: 20px; border-radius: 20px; text-align: center; font-size: 1.5em; margin-top: 20px; border: 3px solid var(--nk-orange);">
+                ⏰ ¡La aventura comienza en <span class="countdown-number" style="font-family: var(--font-title); font-size: 2em; color: var(--nk-green);">X</span> días! ⏰
+            </div>
+        </header>
+
+        <!-- Colección de Stickers -->
+        <section class="sticker-collection">
+            <h2>🏆 Tu Colección de Premios 🏆</h2>
+            <div id="sticker-container">
+                <!-- Los stickers se generarán aquí -->
+            </div>
+            <p style="margin-top: 15px; color: var(--nk-white); font-weight: bold;">¡Desbloquea todos los stickers superando los retos!</p>
+        </section>
+
+        <!-- Progreso de la Aventura -->
+        <div class="adventure-progress" style="margin-bottom: 30px;">
+            <h3 style="color: var(--nk-purple); font-family: var(--font-title); font-size: 2em; margin-bottom: 10px; text-align: center;">📊 Progreso de la Aventura</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar">0%</div>
+            </div>
+        </div>
+
+        <!-- CONTENIDO DE LOS DÍAS -->
+        <main id="days-container">
+            <!-- Los días se generarán aquí con JavaScript -->
+        </main>
+        
+        <!-- Botón Secreto de Premios -->
+        <div style="text-align: center; margin: 40px 0;">
+            <button class="game-button" onclick="unlockAllDays()">
+                Desbloquear Todos los Días
+            </button>
+        </div>
+    </div>
+
+    <!-- Personaje Guía -->
+    <div class="character-guide" onclick="toggleCharacter()">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="slimeGradient" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stop-color="#B2E849" />
+                    <stop offset="100%" stop-color="#76B936" />
+                </radialGradient>
+            </defs>
+            <path d="M 98.7,49.3 C 98.7,69.4 90.2,80.6 75.3,87.5 C 60.3,94.4 46.2,95.5 32.5,91.2 C 18.8,86.9 7.8,77.5 2.7,64.4 C -2.4,51.3 -1.2,35.5 6.4,23.3 C 14,11.1 27.2,3.5 42.1,0.9 C 57,-1.7 71.1,2.5 82.2,12.5 C 93.3,22.5 98.7,34.4 98.7,49.3 Z" fill="url(#slimeGradient)" stroke="#3A1F5D" stroke-width="4"/>
+            <circle cx="35" cy="40" r="8" fill="white" stroke="#3A1F5D" stroke-width="3"/>
+            <circle cx="35" cy="40" r="3" fill="#3A1F5D"/>
+            <circle cx="60" cy="45" r="10" fill="white" stroke="#3A1F5D" stroke-width="3"/>
+            <circle cx="60" cy="45" r="4" fill="#3A1F5D"/>
+            <path d="M 40 65 Q 50 75 65 65" stroke="#3A1F5D" stroke-width="4" fill="transparent" stroke-linecap="round"/>
+        </svg>
+    </div>
+    <div class="character-speech" id="characterSpeech">
+        <p id="characterMessage">¡Hola! Soy Slimey, ¡listo para la aventura!</p>
+    </div>
+
+    <script>
+        // ===================================================================================
+        // CONFIGURACIÓN DE LA AVENTURA
+        // ===================================================================================
+        const adventureData = [
+            { 
+                day: 1, title: '¡EMPIEZA LA AVENTURA!', date: 'Viernes 22 de Agosto', route: 'Gijón → Zaragoza', icon: 'car', special: true, 
+                activities: [
+                    { time: '05:00', desc: '¡Arrancamos! Salida de Gijón.' },
+                    { time: '07:15', desc: 'Parada para desayunar como reyes.' },
+                    { time: '12:30', desc: '¡Llegada a Zaragoza! A dejar todo en los Apartamentos Almada.' },
+                    { time: '16:00', desc: '¡Al Acuario de Zaragoza a ver peces de todos los colores!' },
+                    { time: '18:00', desc: 'Paseo por la increíble Plaza del Pilar y el Puente de Piedra.' }
+                ],
+                quiz: {
+                    image: 'basilica_del_pilar.jpeg',
+                    question: 'Esta famosa iglesia de Zaragoza se llama...',
+                    options: ['La Catedral de Santiago', 'La Basílica del Pilar', 'La Giralda'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 2, title: '¡DÍA EN ZARAGOZA!', date: 'Sábado 23 de Agosto', route: '¡Atracciones y Parques!', icon: 'castle', special: false, 
+                activities: [
+                    { time: 'Mañana', desc: '<b>Plan A (para Emma y Lucas):</b> ¡Al Parque de Atracciones! <b>Plan B (para Nora):</b> ¡Al Parque Grande José A. Labordeta!' },
+                    { time: '13:30', desc: 'Comida para reponer fuerzas.' },
+                    { time: '16:00', desc: 'Tarde de paseo, compras y un helado gigante por la Calle Alfonso I.' },
+                    { time: '17:30', desc: 'A jugar y refrescarse en el Parque del Agua.' },
+                    { time: '20:30', desc: 'Paseo tranquilo por la ribera del Ebro y cena ligera.' }
+                ],
+                quiz: {
+                    image: 'adoquines-del-pilar.jpg',
+                    question: 'Este caramelo súper duro y típico de Zaragoza se llama...',
+                    options: ['Rocas del Ebro', 'Piedras del Moncayo', 'Adoquines del Pilar'],
+                    correct: 2
+                }
+            },
+            { 
+                day: 3, title: '¡RUMBO AL MAR!', date: 'Domingo 24 de Agosto', route: 'Zaragoza → Tossa', icon: 'beach', special: false, 
+                activities: [
+                    { time: '09:30', desc: '¡Nos despedimos de Zaragoza y ponemos rumbo a la playa!' },
+                    { time: '13:30', desc: 'Parada para comer cerca de Lleida.' },
+                    { time: '16:00', desc: '¡Llegada a Tossa! Nos instalamos en nuestro campamento base en Cala Llevadó.' },
+                    { time: '17:00', desc: '¡Estrenamos la piscina y la cala! ¡Al agua, patos!' }
+                ],
+                quiz: {
+                    image: 'castillo_tossa_de_mar.jpg',
+                    question: 'El castillo de Tossa de Mar es especial porque está...',
+                    options: ['En una montaña muy alta', 'Dentro del mar', 'Justo al lado de la playa'],
+                    correct: 2
+                }
+            },
+            { 
+                day: 4, title: '¡DÍA DE CALAS!', date: 'Lunes 25 de Agosto', route: 'Tossa de Mar', icon: 'fish', special: false, 
+                activities: [
+                    { time: 'Mañana', desc: '¡A madrugar para ser los primeros en las calas Llevadó y d\'en Carlos!' },
+                    { time: 'Tarde', desc: 'Después de comer, ¡siesta para los papás y piscina para los peques!' },
+                    { time: 'Noche', desc: 'Paseo por el castillo (la Vila Vella) y la playita de Es Codolar.' }
+                ],
+                quiz: {
+                    image: 'cim-y-tomba.jpg',
+                    question: '¿Cómo se llama el plato de pescado típico de los pescadores de Tossa?',
+                    options: ['Paella Marinera', 'Cim i Tomba', 'Pescado a la Sal'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 5, title: '¡PORTAVENTURA!', date: 'Martes 26 de Agosto', route: '¡El parque más épico!', icon: 'rollercoaster', special: true, 
+                activities: [
+                    { time: '08:00', desc: '¡Salida temprana hacia PortAventura! ¡Que no se nos peguen las sábanas!' },
+                    { time: '10:15', desc: '¡Dentro! A disfrutar de todas las atracciones y mundos.' },
+                    { time: 'Todo el día', desc: 'Papás se turnan en las atracciones grandes mientras Nora descansa (¡truco Baby-Switch!).' },
+                    { time: '21:00', desc: 'Vuelta a Tossa, ¡agotados pero felices!' }
+                ],
+                quiz: {
+                    image: 'pajaro_loco_port_aventura.jpg',
+                    question: 'La mascota de PortAventura es un pájaro famoso. ¿Quién es?',
+                    options: ['El Pato Donald', 'El Pájaro Loco (Woody)', 'Un pingüino'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 6, title: '¡AVENTUREROS!', date: 'Miércoles 27 de Agosto', route: 'Tossa de Mar', icon: 'hike', special: false, 
+                activities: [
+                    { time: 'Mañana', desc: 'Excursión por el Camí de Ronda hasta la preciosa Cala Pola (Nora irá en la mochila de porteo).' },
+                    { time: 'Tarde', desc: 'Comida rica y tarde de relax en la piscina.' },
+                    { time: 'Noche', desc: 'Cena tranquila en el apartamento.' }
+                ],
+                quiz: {
+                    image: 'cami-de-ronda.jpg',
+                    question: 'El "Camí de Ronda" era un camino usado antiguamente por la policía para vigilar a los...',
+                    options: ['Turistas', 'Contrabandistas', 'Pescadores'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 7, title: '¡CIUDAD MEDIEVAL!', date: 'Jueves 28 de Agosto', route: 'Girona mágica', icon: 'museum', special: false, 
+                activities: [
+                    { time: 'Mañana', desc: 'Mañana de relax en la playa o la piscina.' },
+                    { time: '17:30', desc: '¡Excursión de tarde a Girona! A explorar el Barri Vell.' },
+                    { time: '19:00', desc: 'Paseo por los puentes sobre el río Onyar para ver las casas de colores.' },
+                    { time: '21:00', desc: 'Cena en Girona antes de volver a Tossa.' }
+                ],
+                quiz: {
+                    image: 'cul-de-la-lleona.jpeg',
+                    question: 'En Girona, la tradición para volver a la ciudad dice que hay que besar el culo de...',
+                    options: ['Un dragón', 'Una leona de piedra', 'Un gigante'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 8, title: '¡BARCO MÁGICO!', date: 'Viernes 29 de Agosto', route: 'Tossa de Mar', icon: 'boat', special: false, 
+                activities: [
+                    { time: 'Mañana', desc: '¡Paseo en el barco con fondo de cristal para ver el fondo marino!' },
+                    { time: 'Tarde', desc: 'Último baño en la playa, últimas compras de recuerdos.' },
+                    { time: 'Noche', desc: '¡Operación Maleta! Hay que dejar todo listo para mañana.' }
+                ],
+                quiz: {
+                    image: 'barco_fondo_cristal.jpg',
+                    question: 'Mirando por el fondo de cristal, ¿qué es más probable que veas?',
+                    options: ['Tiburones blancos', 'Peces de colores y erizos', 'Ballenas azules'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 9, title: '¡RUMBO AL NORTE!', date: 'Sábado 30 de Agosto', route: 'Tossa → Hernani', icon: 'mountain', special: false, 
+                activities: [
+                    { time: '10:00', desc: '¡Nos despedimos del mar y ponemos rumbo a Hernani!' },
+                    { time: '14:00', desc: 'Parada para comer por el camino (zona Tudela/Pamplona).' },
+                    { time: '17:00', desc: 'Llegada a nuestra casa rural, Arraigori.' },
+                    { time: 'Noche', desc: '¡Escapada a Donostia para cenar unos deliciosos pintxos!' }
+                ],
+                quiz: {
+                    image: 'pintxos_hernani.webp',
+                    question: 'En el País Vasco, las tapas que se comen en los bares se llaman...',
+                    options: ['Montaditos', 'Pintxos', 'Bocadillos'],
+                    correct: 1
+                }
+            },
+            { 
+                day: 10, title: '¡VUELTA A CASA!', date: 'Domingo 31 de Agosto', route: 'Hernani → Gijón', icon: 'home', special: true, 
+                activities: [
+                    { time: '10:00', desc: 'Salida hacia Gijón, ¡la última etapa!' },
+                    { time: 'Media Mañana', desc: 'Parada en Santillana del Mar para estirar las piernas.' },
+                    { time: '14:00', desc: 'Comida rica en Unquera.' },
+                    { time: 'Merienda', desc: 'Última parada en Ribadesella o Llanes.' },
+                    { time: '19:00', desc: '¡Hogar, dulce hogar! Fin de la Gran Aventura.' }
+                ]
+            }
+        ];
+
+        // ===================================================================================
+        // LÓGICA DEL JUEGO
+        // ===================================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            let unlockedDays = 1;
+            const characterMessages = ["¡Vamos a vivir la mejor aventura!", "¿Estás listo para el reto de hoy?", "¡Sigue así, aventurero!"];
+
+            const icons = {
+                car: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.289 7.78954L18.1105 12.1105C17.6316 13.8684 16.1316 15 14.3158 15H9.68421C7.86842 15 6.36842 13.8684 5.88947 12.1105L4.71053 7.78954C3.21053 2.76842 7.07895 0 12 0C16.9211 0 20.7895 2.76842 19.289 7.78954Z" fill="#fff"/><path d="M21 18C21 16.8954 20.1046 16 19 16H5C3.89543 16 3 16.8954 3 18V21C3 22.1046 3.89543 23 5 23H19C20.1046 23 21 22.1046 21 21V18Z" fill="#fff"/><circle cx="6.5" cy="19.5" r="2.5" fill="#00A9E0" /><circle cx="17.5" cy="19.5" r="2.5" fill="#00A9E0" /></svg>`,
+                castle: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 22H22V20H2V22ZM5 18V10H3V7L5 6V3H7V6L9 7V10H7V18H5ZM11 18V11C11 10.4477 11.4477 10 12 10C12.5523 10 13 10.4477 13 11V18H11ZM17 18V10H15V7L17 6V3H19V6L21 7V10H19V18H17Z" fill="#fff"/></svg>`,
+                beach: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.5 17.5L12 15L7.5 17.5L8.5 12.5L5 9H10L12 4L14 9H19L15.5 12.5L16.5 17.5Z" fill="#fff"/></svg>`,
+                fish: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 11.08V12.92C22 16.22 19.64 18.44 16.5 18.44H15.5C14.9 18.44 14.38 18.23 13.97 17.89L12 16.25L10.03 17.89C9.62 18.23 9.1 18.44 8.5 18.44H7.5C4.36 18.44 2 16.22 2 12.92V11.08C2 7.78 4.36 5.56 7.5 5.56H8.5C9.1 5.56 9.62 5.77 10.03 6.11L12 7.75L13.97 6.11C14.38 5.77 14.9 5.56 15.5 5.56H16.5C19.64 5.56 22 7.78 22 11.08ZM16 12C16 11.45 15.55 11 15 11C14.45 11 14 11.45 14 12C14 12.55 14.45 13 15 13C15.55 13 16 12.55 16 12Z" fill="#fff"/></svg>`,
+                rollercoaster: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H5V5H3V3ZM7 3H9V5H7V3ZM11 3H13V5H11V3ZM15 3H17V5H15V3ZM19 3H21V5H19V3ZM3 7H5V9H3V7ZM19 7H21V9H19V7ZM3 11H5V13H3V11ZM19 11H21V13H19V11ZM3 15H5V17H3V15ZM19 15H21V17H19V15ZM3 19H21V21H3V19Z" fill="#fff"/></svg>`,
+                hike: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 5.5C13.5 4.39543 12.6046 3.5 11.5 3.5C10.3954 3.5 9.5 4.39543 9.5 5.5C9.5 6.60457 10.3954 7.5 11.5 7.5C12.6046 7.5 13.5 6.60457 13.5 5.5ZM10 9H13L15.5 21H13L12 16L11 16L10 21H7.5L10 9Z" fill="#fff"/></svg>`,
+                museum: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7V9H22V7L12 2ZM5 10V20H7V10H5ZM11 10V20H13V10H11ZM17 10V20H19V10H17ZM3 22H21V21H3V22Z" fill="#fff"/></svg>`,
+                boat: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 21H4C2.89543 21 2 20.1046 2 19V12.5C2 11.05 2.84 9.77 4.1 9.18L12 5L19.9 9.18C21.16 9.77 22 11.05 22 12.5V19C22 20.1046 21.1046 21 20 21ZM12 7.23L5.5 10.5V19H18.5V10.5L12 7.23Z" fill="#fff"/></svg>`,
+                mountain: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 22H22L12 2ZM12 5.5L17.5 19H6.5L12 5.5Z" fill="#fff"/></svg>`,
+                home: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="#fff"/></svg>`
+            };
+            
+            function createDayCard(dayData) {
+                const isLocked = dayData.day > 1;
+                const itineraryContainerClass = dayData.quiz && !dayData.quizAnswered ? 'itinerary-container hidden' : 'itinerary-container';
+                
+                const activitiesHTML = dayData.activities.map(act => 
+                    `<li class="activity-item">
+                        <span class="activity-time">${act.time}</span>
+                        <span class="activity-desc">${act.desc}</span>
+                    </li>`
+                ).join('');
+                
+                let quizHTML = '';
+                if (dayData.quiz) {
+                    const optionsHTML = dayData.quiz.options.map((opt, i) => `<span class="quiz-option" onclick="checkQuizAnswer(event, ${dayData.day}, ${i}, this)">${opt}</span>`).join('');
+                    quizHTML = `
+                        <div class="quiz-container">
+                            <h3 class="quiz-title">🗝️ ¡PREGUNTA CLAVE! 🗝️</h3>
+                            <p>Responde para ver el itinerario de hoy y desbloquear el siguiente día</p>
+                            <img src="${dayData.quiz.image}" alt="Foto del quiz" class="quiz-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagen+no+disponible';">
+                            <div class="quiz-question">${dayData.quiz.question}</div>
+                            <div class="quiz-options">${optionsHTML}</div>
+                        </div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = `day-card ${isLocked ? 'locked' : ''}`;
+                card.id = `day${dayData.day}`;
+                card.innerHTML = `
+                    <div class="day-header ${dayData.special ? 'special-day' : ''}" onclick="toggleDay(${dayData.day})">
+                        <div class="day-number">${icons[dayData.icon] || ''} DÍA ${dayData.day} <span class="day-badge">${dayData.title}</span></div>
+                        <div style="font-size: 1.4em; color: white; font-family: var(--font-body);">${dayData.date}</div>
+                        <div style="color: white; font-size: 1.2em; font-family: var(--font-body);">${dayData.route}</div>
+                    </div>
+                    <div class="day-content" id="content${dayData.day}">
+                        ${quizHTML}
+                        <div class="${itineraryContainerClass}">
+                            <div class="activity-box">
+                                <h3 class="activity-title">Itinerario del Día</h3>
+                                <ul class="activity-list">${activitiesHTML}</ul>
+                            </div>
+                        </div>
+                    </div>`;
+                return card;
+            }
+
+            window.toggleDay = function(dayNum) {
+                const card = document.getElementById(`day${dayNum}`);
+                if (dayNum > unlockedDays) {
+                    createSoundEffect('🔒');
+                    showCharacterMessage("¡Aún no! Responde la pregunta del día anterior.");
+                    card.style.animation = 'horizontal-shake 0.5s';
+                    setTimeout(() => card.style.animation = '', 500);
+                    return;
+                }
+                const content = document.getElementById(`content${dayNum}`);
+                const isShowing = content.classList.contains('show');
+                document.querySelectorAll('.day-content.show').forEach(c => c.classList.remove('show'));
+                if (!isShowing) {
+                    content.classList.add('show');
+                    // Scroll to the top of the card when opened
+                    setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                    createSoundEffect('✨');
+                }
+            }
+            
+            window.checkQuizAnswer = function(event, dayNum, selectedIndex, element) {
+                event.stopPropagation();
+                const dayData = adventureData.find(d => d.day === dayNum);
+                const isCorrect = selectedIndex === dayData.quiz.correct;
+                const optionsContainer = element.parentElement;
+
+                Array.from(optionsContainer.children).forEach(child => child.style.pointerEvents = 'none');
+
+                if (isCorrect) {
+                    element.classList.add('correct');
+                    createSoundEffect('🎉');
+                    showCharacterMessage("¡GENIAL! ¡Has desvelado el plan de hoy!");
+                    createConfetti();
+                    
+                    const itineraryContainer = document.querySelector(`#content${dayNum} .itinerary-container`);
+                    if (itineraryContainer) {
+                        itineraryContainer.classList.remove('hidden');
+                        itineraryContainer.style.animation = 'slideDown 0.5s ease';
+                    }
+                    dayData.quizAnswered = true;
+
+                    if (dayNum < adventureData.length) {
+                        unlockDay(dayNum + 1);
+                    }
+                } else {
+                    element.classList.add('incorrect');
+                    createSoundEffect('❌');
+                    showCharacterMessage("¡Oh, no! Inténtalo de nuevo.");
+                    setTimeout(() => {
+                        element.classList.remove('incorrect');
+                        Array.from(optionsContainer.children).forEach(child => child.style.pointerEvents = 'auto');
+                    }, 1500);
+                }
+            }
+            
+            window.unlockAllDays = function() {
+                showCharacterMessage("¡Modo Súper Papás activado! Desbloqueando todo...");
+                adventureData.forEach(d => {
+                    if (d.quiz) {
+                        d.quizAnswered = true;
+                        const itinerary = document.querySelector(`#content${d.day} .itinerary-container`);
+                        if(itinerary) {
+                            itinerary.classList.remove('hidden');
+                        }
+                    }
+                    unlockDay(d.day);
+                });
+                createConfetti(100);
+            }
+
+            window.toggleCharacter = () => {
+                const speech = document.getElementById('characterSpeech');
+                if (speech.classList.toggle('show')) {
+                    showCharacterMessage(characterMessages[Math.floor(Math.random() * characterMessages.length)]);
+                }
+            }
+            
+            function unlockDay(dayNum) {
+                const card = document.getElementById(`day${dayNum}`);
+                if (card && card.classList.contains('locked')) {
+                    card.classList.remove('locked');
+                    card.classList.add('unlocked');
+                    unlockedDays = Math.max(unlockedDays, dayNum);
+                    earnSticker(dayNum);
+                    updateProgress();
+                }
+            }
+
+            function updateProgress() {
+                const totalDays = adventureData.length;
+                const percentage = totalDays > 0 ? (unlockedDays / totalDays) * 100 : 0;
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = `${Math.round(percentage)}%`;
+            }
+
+            function earnSticker(stickerNum) {
+                const sticker = document.querySelector(`.sticker[data-sticker-id='${stickerNum}']`);
+                if (sticker && !sticker.classList.contains('earned')) {
+                    sticker.classList.add('earned');
+                    createSoundEffect('🏆');
+                }
+            }
+
+            function showCharacterMessage(message) {
+                const speech = document.getElementById('characterSpeech');
+                document.getElementById('characterMessage').textContent = message;
+                speech.classList.add('show');
+                setTimeout(() => speech.classList.remove('show'), 4000);
+            }
+
+            function createSoundEffect(emoji) {
+                const effect = document.createElement('div');
+                effect.className = 'sound-effect';
+                effect.textContent = emoji;
+                effect.style.left = `${Math.random() * 90}vw`;
+                effect.style.top = `${Math.random() * 90}vh`;
+                document.body.appendChild(effect);
+                setTimeout(() => effect.remove(), 1000);
+            }
+
+            function createConfetti(count = 40) {
+                const colors = ['#FF6600', '#98C83C', '#00A9E0', '#3A1F5D'];
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const c = document.createElement('div');
+                        c.className = 'confetti';
+                        c.style.left = `${Math.random() * 100}%`;
+                        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        c.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                        const size = Math.random() * 10 + 5;
+                        c.style.width = `${size}px`;
+                        c.style.height = `${size}px`;
+                        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                        document.body.appendChild(c);
+                        setTimeout(() => c.remove(), 5000);
+                    }, i * 30);
+                }
+            }
+
+            function initialize() {
+                adventureData.forEach(d => { if(d.quiz) d.quizAnswered = false; });
+                const daysContainer = document.getElementById('days-container');
+                adventureData.forEach(day => daysContainer.appendChild(createDayCard(day)));
+                
+                const stickerContainer = document.getElementById('sticker-container');
+                adventureData.forEach(day => {
+                    const stickerDiv = document.createElement('div');
+                    stickerDiv.className = 'sticker';
+                    stickerDiv.dataset.stickerId = day.day;
+                    stickerDiv.innerHTML = icons[day.icon] || '';
+                    stickerContainer.appendChild(stickerDiv);
+                });
+
+                const tripDate = new Date('2025-08-22T00:00:00');
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const daysUntil = Math.ceil((tripDate - today) / (1000 * 60 * 60 * 24));
+                document.querySelector('.countdown-number').textContent = daysUntil > 0 ? daysUntil : '¡YA!';
+                updateProgress();
+                setTimeout(() => showCharacterMessage("¡Bienvenidos a la aventura!"), 1000);
+            }
+
+            initialize();
+        });
+    </script>
+</body>
+</html>
