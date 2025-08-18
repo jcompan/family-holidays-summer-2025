@@ -128,13 +128,41 @@
         .day-content { padding: 30px; display: none; }
         .day-content.show { display: block; animation: slideDown 0.5s ease; }
         
-        /* --- ITINERARIO DE ACTIVIDADES --- */
-        .itinerary-container.hidden { display: none; }
+        /* --- ITINERARIO Y RUTA --- */
+        .itinerary-container.hidden, .accommodation-container.hidden { display: none; }
         .activity-box {
             background: #f0f0f0;
             border: 4px solid var(--nk-blue); 
             border-radius: 20px;
-            padding: 25px; margin: 20px 0; position: relative;
+            padding: 25px; margin-top: 20px; position: relative;
+        }
+        .route-map {
+            width: 100%;
+            height: 450px;
+            border: 4px solid var(--nk-purple);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .route-details {
+            background: var(--nk-white);
+            border: 2px dashed var(--nk-purple);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .route-details h4 {
+            font-family: var(--font-title);
+            font-size: 1.5em;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .route-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
         }
         .activity-title { 
             font-family: var(--font-title);
@@ -201,41 +229,65 @@
         .quiz-option.correct { background: var(--nk-green); color: var(--nk-purple); }
         .quiz-option.incorrect { background: var(--nk-orange); color: var(--nk-white); animation: horizontal-shake 0.5s; }
 
-        /* --- GEMINI STORY FEATURE --- */
-        .story-button {
-            font-family: var(--font-title);
-            font-size: 1.3em;
-            letter-spacing: 1px;
-            background: var(--nk-green); 
-            color: var(--nk-purple); 
-            border: 3px solid var(--nk-purple); 
-            padding: 10px 25px;
-            border-radius: 30px;
-            cursor: pointer; 
-            box-shadow: 6px 6px 0px var(--nk-purple); 
-            transition: all 0.2s ease;
-            display: block;
-            margin: 20px auto 0;
-        }
-        .story-button:hover { 
-            transform: translate(3px, 3px); 
-            box-shadow: 3px 3px 0px var(--nk-purple); 
-        }
-        .story-button:disabled {
-            background: #ccc;
-            box-shadow: 3px 3px 0px #999;
-            cursor: not-allowed;
-        }
-        .story-display {
-            background: var(--nk-white);
-            border: 4px dashed var(--nk-orange);
+        /* --- ACCOMMODATION PREVIEW --- */
+        .accommodation-preview {
+            background: var(--nk-green);
+            border: 4px solid var(--nk-purple);
             border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
-            font-size: 1.1em;
-            line-height: 1.7;
-            white-space: pre-wrap;
+            padding: 25px;
+            margin-top: 30px;
         }
+        .accommodation-title {
+            font-family: var(--font-title);
+            color: var(--nk-purple);
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .accommodation-carousel {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 4px solid var(--nk-purple);
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        .carousel-item img {
+            width: 100%;
+            display: block;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 102, 0, 0.8);
+            border: 3px solid var(--nk-purple);
+            color: var(--nk-white);
+            font-size: 2em;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-family: var(--font-title);
+        }
+        .carousel-btn.prev { left: 10px; }
+        .carousel-btn.next { right: 10px; }
+        .accommodation-description {
+            background: var(--nk-white);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid var(--nk-purple);
+        }
+
 
         /* --- OTROS COMPONENTES --- */
         .character-guide {
@@ -409,18 +461,29 @@
             { 
                 day: 1, title: '¡EMPIEZA LA AVENTURA!', date: 'Viernes 22 de Agosto', route: 'Gijón → Zaragoza', icon: 'car', special: true, 
                 activities: [
-                    { time: '05:00', desc: '¡Arrancamos! Salida de Gijón.' },
-                    { time: '07:15', desc: 'Parada para desayunar como reyes.' },
-                    { time: '12:30', desc: '¡Llegada a Zaragoza! A dejar todo en los Apartamentos Almada.' },
-                    { time: '16:00', desc: '¡Al Acuario de Zaragoza a ver peces de todos los colores!' },
-                    { time: '18:00', desc: 'Paseo por la increíble Plaza del Pilar y el Puente de Piedra.' }
+                    { time: '08:00', desc: '¡Arrancamos! Salida de Gijón.' },
+                    { time: '10:00', desc: 'Parada para estirar las piernas en Hoznayo.' },
+                    { time: '12:30', desc: 'Parada para comer en Logroño.' },
+                    { time: '15:00', desc: '¡Llegada a Zaragoza! Check-in en los Apartamentos Almada.' },
+                    { time: '16:30', desc: '¡Al Acuario de Zaragoza a ver peces de todos los colores!' },
+                    { time: '18:30', desc: 'Paseo por la increíble Plaza del Pilar y el Puente de Piedra.' }
                 ],
                 quiz: {
                     image: 'basilica_del_pilar.jpeg',
                     question: 'Esta famosa iglesia de Zaragoza se llama...',
                     options: ['La Catedral de Santiago', 'La Basílica del Pilar', 'La Giralda'],
                     correct: 1
-                }
+                },
+                accommodation: {
+                    title: "¡Nuestro Campamento en Zaragoza!",
+                    description: "Apartamentos Almada - ¡En pleno centro! Tenemos 2 habitaciones, cocina completa, aire acondicionado y todo lo necesario para descansar. ¡Está al lado de la Plaza de España y el Tubo para ir de tapas!",
+                    images: [
+                        '566802005.jpg', '634273002.jpg', '634278245.jpg', '566802068.jpg',
+                        '634278229.jpg', '636522269.jpg', '634273000.jpg', '566808519.jpg'
+                    ]
+                },
+                routeMap: 'https://www.google.com/maps/embed?pb=!1m40!1m12!1m3!1d1504104.2779727434!2d-4.58512924670402!3d42.58281184546402!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m25!3e0!4m5!1s0xd367c83654a6d93%3A0xa54e94a56f797643!2sC.%20Puerto%20Vallarta%2C%20Gij%C3%B3n%2C%2033204%20Gij%C3%B3n%2C%20Asturias!3m2!1d43.528725099999996!2d-5.6504813!4m5!1s0xd4eca35f53e326f%3A0x64c2dfefe029f303!2sEstaci%C3%B3n%20de%20Servicio%20Repsol%2C%20A-8%2C%20P.K.%20195%2C00%20D%2C%2039716%20Hoznayo%2C%20Cantabria!3m2!1d43.390006!2d-3.6827316999999997!4m5!1s0xd5aa94d1a29d09b%3A0x1e8e95ad3c0d8d11!2s%C3%81rea%20de%20Servicio%20Logro%C3%B1o%20La%20Pausa%2C%20%C3%8Área%20de%20Servicio%20Logro%C3%B1o%20Autopista%20ap-68%2C%20km.%20136%2C%20Acceso%20ambas%20direcciones%2C%2026001%20Logro%C3%B1o%2C%20La%20Rioja!3m2!1d42.4502842!2d-2.3694300999999998!4m5!1s0xd5915ce7f217891%3A0xa18612ab36a7c533!2sApartamentos%20Almada%20calle%20Alfonso%20-%20SAS%2C%20Calle%20de%20Alfonso%20I%2C%20Zaragoza!3m2!1d41.6538679!2d-0.8811865999999999!5e0!3m2!1sen!2ses!4v1755508816368!5m2!1sen!2ses',
+                routeDetails: { distance: '527 km', time: '5h 30min' }
             },
             { 
                 day: 2, title: '¡DÍA EN ZARAGOZA!', date: 'Sábado 23 de Agosto', route: '¡Atracciones y Parques!', icon: 'castle', special: false, 
@@ -441,9 +504,10 @@
             { 
                 day: 3, title: '¡RUMBO AL MAR!', date: 'Domingo 24 de Agosto', route: 'Zaragoza → Tossa', icon: 'beach', special: false, 
                 activities: [
-                    { time: '09:30', desc: '¡Nos despedimos de Zaragoza y ponemos rumbo a la playa!' },
-                    { time: '13:30', desc: 'Parada para comer cerca de Lleida.' },
-                    { time: '16:00', desc: '¡Llegada a Tossa! Nos instalamos en nuestro campamento base en Cala Llevadó.' },
+                    { time: '10:00', desc: '¡Nos despedimos de Zaragoza y ponemos rumbo a la playa!' },
+                    { time: '12:00', desc: 'Primera parada técnica en el Área de Servicio de Lleida.' },
+                    { time: '14:00', desc: 'Parada para comer en el Área de Servicio Porta de Barcelona.' },
+                    { time: '16:00', desc: '¡Llegada a Tossa! Check-in en nuestro campamento base en Cala Llevadó.' },
                     { time: '17:00', desc: '¡Estrenamos la piscina y la cala! ¡Al agua, patos!' }
                 ],
                 quiz: {
@@ -451,7 +515,18 @@
                     question: 'El castillo de Tossa de Mar es especial porque está...',
                     options: ['En una montaña muy alta', 'Dentro del mar', 'Justo al lado de la playa'],
                     correct: 2
-                }
+                },
+                accommodation: {
+                    title: "¡NUESTRA VILLA EN TOSSA!",
+                    description: "¡Nuestra casa en Cala Llevadó! Tiene playa privada, terraza con vistas al jardín, 3 habitaciones, cocina, 2 baños, piscina, jardín... ¡y se puede ir de pesca o hacer senderismo!",
+                    images: [
+                        '300949464.jpg', '300949467.jpg', '300949473.jpg', '300949547.jpg',
+                        '300949548.jpg', '300949622.jpg', '554337295.jpg', '554337300.jpg',
+                        '554337308.jpg', '318448510.jpg'
+                    ]
+                },
+                routeMap: 'https://www.google.com/maps/embed?pb=!1m40!1m12!1m3!1d1529179.9852921038!2d-0.3024044020325654!3d41.53287915483518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m25!3e0!4m5!1s0xd5915ce7f217891%3A0xa18612ab36a7c533!2sApartamentos%20Almada%20calle%20Alfonso%20-%20SAS%2C%20Calle%20de%20Alfonso%20I%2C%20Zaragoza!3m2!1d41.6538679!2d-0.8811865999999999!4m5!1s0x12a6df1fb5c18127%3A0x40f7c303605f8d53!2s%C3%80rea%20de%20servei%20Lleida%20-%20Cafestore%2C%20%C3%8Área%20de%20Servicio%20Lleida.%20Autopista%20AP-2%2C%20Km.%20143%20Direcci%C3%B3n%20Lleida%2C%2025161%20Alf%C3%A9s%2C%20Lleida!3m2!1d41.542727!2d0.6380916999999999!4m5!1s0x12a48e325fa8b9f3%3A0x39f6cfebc7582f98!2s%C3%80rea%20de%20Servei%20Porta%20de%20Barcelona%20-%20Dir.%20Barcelona%2C%20Autopista%20Ap-7%2C%20Km.%20165%2C%2008755%20Castellbisbal%2C%20Barcelona!3m2!1d41.467002699999995!2d1.9770059999999998!4m5!1s0x12bb107a719a5b73%3A0xab7371fbcbe4e0ed!2sCarrer%20Taur%C3%B3%2C%2085F%2C%2017320%20Tossa%20de%20Mar%2C%20Girona!3m2!1d41.7174129!2d2.9071086999999998!5e0!3m2!1sen!2ses!4v1755510134441!5m2!1sen!2ses',
+                routeDetails: { distance: '382 km', time: '4h' }
             },
             { 
                 day: 4, title: '¡DÍA DE CALAS!', date: 'Lunes 25 de Agosto', route: 'Tossa de Mar', icon: 'fish', special: false, 
@@ -480,14 +555,15 @@
                     question: 'La mascota de PortAventura es un pájaro famoso. ¿Quién es?',
                     options: ['El Pato Donald', 'El Pájaro Loco (Woody)', 'Un pingüino'],
                     correct: 1
-                }
+                },
+                routeDetails: { distance: '195 km', time: '2h 15min' }
             },
             { 
                 day: 6, title: '¡AVENTUREROS!', date: 'Miércoles 27 de Agosto', route: 'Tossa de Mar', icon: 'hike', special: false, 
                 activities: [
                     { time: 'Mañana', desc: 'Excursión por el Camí de Ronda hasta la preciosa Cala Pola (Nora irá en la mochila de porteo).' },
                     { time: 'Tarde', desc: 'Comida rica y tarde de relax en la piscina.' },
-                    { time: 'Noche', desc: 'Cena tranquila en el apartamento.' }
+                    { time: 'Noche', desc: 'Cena tranquila en la villa.' }
                 ],
                 quiz: {
                     image: 'cami-de-ronda.jpg',
@@ -528,9 +604,11 @@
             { 
                 day: 9, title: '¡RUMBO AL NORTE!', date: 'Sábado 30 de Agosto', route: 'Tossa → Hernani', icon: 'mountain', special: false, 
                 activities: [
-                    { time: '10:00', desc: '¡Nos despedimos del mar y ponemos rumbo a Hernani!' },
-                    { time: '14:00', desc: 'Parada para comer por el camino (zona Tudela/Pamplona).' },
-                    { time: '17:00', desc: 'Llegada a nuestra casa rural, Arraigori.' },
+                    { time: '08:30', desc: '¡Nos despedimos del mar y ponemos rumbo a Hernani!' },
+                    { time: '11:00', desc: 'Parada en Cafeteria Queralt (El Bruc).' },
+                    { time: '14:00', desc: 'Comida en Restaurante Almudévar (Huesca).' },
+                    { time: '16:30', desc: 'Parada técnica en Área de Servicio Imarcoain (Navarra).' },
+                    { time: '18:00', desc: 'Llegada a nuestra casa rural, Arraigori.' },
                     { time: 'Noche', desc: '¡Escapada a Donostia para cenar unos deliciosos pintxos!' }
                 ],
                 quiz: {
@@ -538,7 +616,17 @@
                     question: 'En el País Vasco, las tapas que se comen en los bares se llaman...',
                     options: ['Montaditos', 'Pintxos', 'Bocadillos'],
                     correct: 1
-                }
+                },
+                accommodation: {
+                    title: "¡Nuestra Casa Rural en Hernani!",
+                    description: "La Casa Rural Arraigorri está situada en Hernani, muy cerca del Museo Chillida Leku. Tiene WiFi, TV y un jardín precioso. ¡Por la mañana nos espera un desayuno continental!",
+                    images: [
+                        '129817679.jpg', '124679579.jpg', '255466504.jpg', '129817948.jpg',
+                        '129817331.jpg', '124680703.jpg'
+                    ]
+                },
+                routeMap: 'https://www.google.com/maps/embed?pb=!1m46!1m12!1m3!1d1517220.5237711328!2d-2.8166198730468586!3d42.03628932756405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m31!3e0!4m5!1s0x12bb107a719a5b73%3A0xab7371fbcbe4e0ed!2sCarrer%20Taur%C3%B3%2C%2085F%2C%2017320%20Tossa%20de%20Mar%2C%20Girona!3m2!1d41.7174129!2d2.9071086999999998!4m5!1s0x12a45dfea609213d%3A0xf104b82159a56730!2sCafeteria%20Queralt%2C%20A-2%2C%201630%2C%2008294%20El%20Bruc%2C%20Barcelona!3m2!1d41.5930611!2d1.7500692!4m5!1s0xd5853d7d01d0d85%3A0x92257df6afa6b309!2s%C3%81rea%20341%20Restaurante%20Almud%C3%A9var%2C%20Autov%C3%ADa%20Mud%C3%A9jar%2C%20341%2C%2022270%20Almud%C3%A9var%2C%20Huesca!3m2!1d42.036284099999996!2d-0.5754673!4m5!1s0xd5090de123e4007%3A0x596e39fc2ce9f62e!2s%C3%81REA%20DE%20SERVICIO%20BAR%20RESTAURANTE%20IMARCOAIN%2C%20AP-15%2C%2078%2C%2031119%2C%20Navarra!3m2!1d42.729112099999995!2d-1.6185269999999998!4m5!1s0xd51b1d5d2a34d1d%3A0xc4552348ddcc466b!2sArraigorri%20Landetxea%2C%20Jauregi%20Bailara%2C%2036%2C%2020120%20Hernani%2C%20Gipuzkoa!3m2!1d43.269264799999995!2d-1.9904967!5e0!3m2!1sen!2ses!4v1755512262737!5m2!1sen!2ses',
+                routeDetails: { distance: '640 km', time: '6h 20min' }
             },
             { 
                 day: 10, title: '¡VUELTA A CASA!', date: 'Domingo 31 de Agosto', route: 'Hernani → Gijón', icon: 'home', special: true, 
@@ -548,7 +636,8 @@
                     { time: '14:00', desc: 'Comida rica en Unquera.' },
                     { time: 'Merienda', desc: 'Última parada en Ribadesella o Llanes.' },
                     { time: '19:00', desc: '¡Hogar, dulce hogar! Fin de la Gran Aventura.' }
-                ]
+                ],
+                routeDetails: { distance: '380 km', time: '3h 50min' }
             }
         ];
 
@@ -575,6 +664,8 @@
             function createDayCard(dayData) {
                 const isLocked = dayData.day > 1;
                 const itineraryContainerClass = dayData.quiz && !dayData.quizAnswered ? 'itinerary-container hidden' : 'itinerary-container';
+                const accommodationContainerClass = dayData.accommodation && !dayData.quizAnswered ? 'accommodation-container hidden' : 'accommodation-container';
+
                 
                 const activitiesHTML = dayData.activities.map(act => 
                     `<li class="activity-item">
@@ -582,6 +673,39 @@
                         <span class="activity-desc">${act.desc}</span>
                     </li>`
                 ).join('');
+                
+                let routeDetailsHTML = '';
+                if (dayData.routeDetails) {
+                    routeDetailsHTML = `
+                        <div class="route-details">
+                            <h4>🗺️ Datos de la Ruta</h4>
+                            <div class="route-info">
+                                <span><strong>Distancia:</strong> ${dayData.routeDetails.distance}</span>
+                                <span><strong>Tiempo aprox:</strong> ${dayData.routeDetails.time}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let routeMapHTML = '';
+                if (dayData.routeMap) {
+                    routeMapHTML = `<iframe src="${dayData.routeMap}" class="route-map" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+                }
+
+                let accommodationHTML = '';
+                if (dayData.accommodation) {
+                    const imagesHTML = dayData.accommodation.images.map(img => `<div class="carousel-item"><img src="${img}" alt="Foto del alojamiento"></div>`).join('');
+                    accommodationHTML = `
+                        <div class="accommodation-preview">
+                            <h3 class="accommodation-title">🏡 ${dayData.accommodation.title} 🏡</h3>
+                            <div class="accommodation-carousel" id="carousel-day-${dayData.day}">
+                                <div class="carousel-inner">${imagesHTML}</div>
+                                <button class="carousel-btn prev" onclick="moveCarousel(${dayData.day}, -1)">&lt;</button>
+                                <button class="carousel-btn next" onclick="moveCarousel(${dayData.day}, 1)">&gt;</button>
+                            </div>
+                            <div class="accommodation-description">${dayData.accommodation.description}</div>
+                        </div>`;
+                }
                 
                 let quizHTML = '';
                 if (dayData.quiz) {
@@ -607,9 +731,14 @@
                     </div>
                     <div class="day-content" id="content${dayData.day}">
                         ${quizHTML}
+                        <div class="${accommodationContainerClass}">
+                            ${accommodationHTML}
+                        </div>
                         <div class="${itineraryContainerClass}">
                             <div class="activity-box">
                                 <h3 class="activity-title">📜 Itinerario del Día</h3>
+                                ${routeMapHTML}
+                                ${routeDetailsHTML}
                                 <ul class="activity-list">${activitiesHTML}</ul>
                             </div>
                         </div>
@@ -631,7 +760,6 @@
                 document.querySelectorAll('.day-content.show').forEach(c => c.classList.remove('show'));
                 if (!isShowing) {
                     content.classList.add('show');
-                    // Scroll to the top of the card when opened
                     setTimeout(() => {
                         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
@@ -658,6 +786,13 @@
                         itineraryContainer.classList.remove('hidden');
                         itineraryContainer.style.animation = 'slideDown 0.5s ease';
                     }
+
+                    const accommodationContainer = document.querySelector(`#content${dayNum} .accommodation-container`);
+                    if (accommodationContainer) {
+                        accommodationContainer.classList.remove('hidden');
+                        accommodationContainer.style.animation = 'slideDown 0.5s ease';
+                    }
+
                     dayData.quizAnswered = true;
 
                     if (dayNum < adventureData.length) {
@@ -677,13 +812,11 @@
             window.unlockAllDays = function() {
                 showCharacterMessage("¡Modo Súper Papás activado! Desbloqueando todo...");
                 adventureData.forEach(d => {
-                    if (d.quiz) {
-                        d.quizAnswered = true;
-                        const itinerary = document.querySelector(`#content${d.day} .itinerary-container`);
-                        if(itinerary) {
-                            itinerary.classList.remove('hidden');
-                        }
-                    }
+                    if (d.quiz) d.quizAnswered = true;
+                    const itinerary = document.querySelector(`#content${d.day} .itinerary-container`);
+                    if(itinerary) itinerary.classList.remove('hidden');
+                    const accommodation = document.querySelector(`#content${d.day} .accommodation-container`);
+                    if(accommodation) accommodation.classList.remove('hidden');
                     unlockDay(d.day);
                 });
                 createConfetti(100);
@@ -757,6 +890,30 @@
                         setTimeout(() => c.remove(), 5000);
                     }, i * 30);
                 }
+            }
+            
+            let carouselPositions = {};
+
+            window.moveCarousel = function(dayNum, direction) {
+                const carouselInner = document.querySelector(`#carousel-day-${dayNum} .carousel-inner`);
+                const items = carouselInner.querySelectorAll('.carousel-item');
+                const totalItems = items.length;
+
+                if (!carouselPositions[dayNum]) {
+                    carouselPositions[dayNum] = 0;
+                }
+
+                carouselPositions[dayNum] += direction;
+
+                if (carouselPositions[dayNum] >= totalItems) {
+                    carouselPositions[dayNum] = 0;
+                }
+                if (carouselPositions[dayNum] < 0) {
+                    carouselPositions[dayNum] = totalItems - 1;
+                }
+
+                const newTransform = -carouselPositions[dayNum] * 100;
+                carouselInner.style.transform = `translateX(${newTransform}%)`;
             }
 
             function initialize() {
